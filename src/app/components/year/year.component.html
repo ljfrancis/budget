@@ -1,0 +1,74 @@
+<div class="container balance">
+
+<!--App header with current month and prev/next buttons -->
+  <div class="row d-flex justify-content-between pt-4 header">
+    <!-- Previous Year -->
+    <div class="col-2">
+    <a class="btn btn-primary month-button btn-lg" [routerLink]="['/year', yearData[0].year - 1]"><< Previous Year</a>
+
+    </div>
+    <div class="col-8">
+    <h1 class="month-header text-center">{{yearData[0].year}}</h1>
+
+    </div>
+    <div class="col-2">
+    <!-- Next Year -->
+    <a class="btn btn-primary month-button btn-lg" [routerLink]="['/year', yearData[0].year + 1]">Next Year >></a>
+    </div>
+  </div>
+</div>
+
+  
+<div *ngFor="let month of yearData" class="container balance">
+  
+    <div class="col">
+    <h1 class="month-header text-center">{{month.monthName}}</h1>
+    </div>
+  
+  <hr>
+  
+  <!--Predicted and Actual Expenses -->
+  <div class="row d-flex justify-content-between header">
+    <div class="col-5 text-left">
+      <p class="expense-label">Predicted Expenses:</p>
+      <span>{{month.totalPredictedExpenses | number: '.2-2'}}</span>
+    </div>
+    <div class="col-5 text-left">
+      <p class="expense-label">Total Expenses:</p>
+      <span>{{month.totalExpenses | number: '.2-2'}}</span>
+    </div>
+  </div>
+  
+   <hr>
+  
+  <!--Account Balances -->
+  <div class="row d-flex justify-content-between header">
+    <div class="col-5 text-left">
+      <p class="expense-label">Account Balance:</p>
+      <span>{{month.account.balance | number: '.2-2'}}</span>
+    </div>
+    <div class="col-5 text-left">
+      <p class="expense-label">Monthly Income:</p>
+      <span>{{month.income | number: '.2-2'}}</span>
+    </div>
+  </div>
+
+  <hr>
+
+
+  <!--Calculate Net -->
+  <div class="row d-flex justify-content-between header">  
+    <div class="col-5 text-left" >
+      <p class="expense-label">After Total Expenses:</p> 
+      <span>{{month.account.balance - month.totalExpenses | number: '.2-2'}}</span>
+    </div>
+    <div class="col-5 text-left">
+      <p class="expense-label">After Total Expenses:</p> 
+      <span>{{month.income - month.totalExpenses | number: '.2-2'}}</span>
+    </div>
+  </div>
+  
+  <hr>
+</div>
+
+

@@ -1,0 +1,134 @@
+<div class="container balance">
+
+
+
+<!--App header with current month and prev/next buttons -->
+  <div class="row d-flex justify-content-between pt-4 header">
+    <!-- goes to Dec. of previous year if Jan. -->
+    <div class="col-2">
+    <a class="btn btn-primary month-button btn-lg" [routerLink]="['/month', monthData.month > 1 ? monthData.month - 1 : 12, monthData.month > 1 ? monthData.year : monthData.year - 1 ]"><< Previous Month</a>
+
+    </div>
+    <div class="col-8">
+    <h1 class="month-header text-center">{{monthName}} {{monthData.year}}</h1>
+
+    </div>
+    <div class="col-2">
+    <!-- goes to Jan. of next year if Dec. -->
+    <a class="btn btn-primary month-button btn-lg" [routerLink]="['/month', monthData.month < 12? monthData.month + 1 : 1, monthData.month < 12 ? monthData.year : monthData.year + 1 ]">Next Month >></a>
+    </div>
+  </div>
+  
+  <hr>
+
+  <!--Account Balances -->
+  <div class="row d-flex justify-content-between header">
+    <div class="col-5 text-center">
+      <label>Account Balance:</label>
+      <input class="balance-input" *ngIf="monthData.editBalances" type="number" [(ngModel)]="monthData.account.balance">
+      <span *ngIf="!monthData.editBalances">{{monthData.account.balance | number: '.2-2'}}</span>
+    </div>
+    <div class="col-5 text-center">
+      <label>Monthly Income:</label>
+      <input class="balance-input" *ngIf="monthData.editBalances" type="number" [(ngModel)]="monthData.income">
+      <span *ngIf="!monthData.editBalances">{{monthData.income | number: '.2-2'}}</span>
+    </div>
+    
+    <div class="col-1">
+    <button *ngIf="!monthData.editBalances" class="btn btn-default" (click)="editBalances()">Edit</button>
+
+
+    <button *ngIf="monthData.editBalances" class="btn btn-primary" (click)="saveBalances()">Save</button>
+    </div>
+  </div>
+
+
+  <hr>
+
+  <!--Calculate Remaining Funds -->
+  <div class="row d-flex justify-content-between">  
+    <div class="col-5 text-left" >
+      <p><span class="expense-label">After Expense Limits:</span>{{monthData.account.balance - totalPredictedExpenses | number: '.2-2'}}</p>
+      <p><span class="expense-label">After Total Expenses:</span> {{monthData.account.balance - totalExpenses | number: '.2-2'}}</p>
+    </div>
+    <div class="col-5 text-left">
+      <p><span class="expense-label">After Expense Limits:</span> {{monthData.income - totalPredictedExpenses | number: '.2-2'}}</p>
+      <p><span class="expense-label">After Total Expenses:</span> {{monthData.income - totalExpenses | number: '.2-2'}}</p>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <div class="row categories">
+      <div class="col">
+        <table class="table table-striped" *ngFor="let c of monthData.categories;">
+
+
+          <thead class="row">
+            <tr>
+              <th class="col-4" colspan="2">
+              <input *ngIf="c.edit" [(ngModel)]="c.category" placeholder="Category Name">
+
+              <span *ngIf="!c.edit">{{c.category}}</span>
+              </th>
+
+              
+              <!-- Edit, Save, Cancel, Delete Buttons -->
+              <th class="col-4" colspan="1"> 
+              <button *ngIf="!c.edit" class="btn btn-default" (click)="editCategory(c.id)">Edit</button>
+
+              <div class="d-flex flex-row">
+              <button *ngIf="c.edit" class="btn btn-primary" (click)="saveCategory(c.id)">Save</button>
+
+              <button *ngIf="c.edit"  class="btn btn-danger" (click)="deleteCategory(c.id)">Delete</button>
+
+              <button *ngIf="c.edit" class="btn btn-default" (click)="cancel()">Cancel</button>
+              </div>
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+            
+          
+          <!-- Items  -->
+          <tbody>
+            <tr class="row table-headers">
+              <td class="col">Item</td>
+              <td class="col">Expense Limit</td>
+              <td class="col">Total Expenses</td>
+              <td class="col"></td>
+            </tr>
+            <tr *ngFor="let item of c.items; let i = index; " class="row items d-flex align-content-around">
+              <td class="col"> 
+              <input *ngIf="c.edit" type="text" [(ngModel)]="item.name">
+              <span *ngIf="!c.edit">{{item.name}}</span>
+              </td>
+              <td class="col">
+              <input class="amount" *ngIf="c.edit" type="number"[(ngModel)]="item.amount">
+              <span *ngIf="!c.edit">{{item.amount | number: '.2-2'}}</span>
+              </td>
+              <td class="col">
+              <input class="amount" *ngIf="c.edit" type="number"[(ngModel)]="item.expense">
+              <span *ngIf="!c.edit">{{item.expense | number: '.2-2'}}</span>
+              </td>
+              <td class="col">
+              <button *ngIf="c.edit" class="btn btn-danger" (click)="deleteItem(c.id, i)">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+            <button *ngIf="c.edit" class="btn btn-primary" (click)="addItem(c.id)">+ Item</button>
+            
+              </td>
+            </tr>
+          </tbody>
+      </table>
+        
+      <!-- Add Category Button -->
+     <div class="row">
+      <button class="btn btn-primary" (click)="addCategory()">+ Category</button>
+      <button class="btn" (click)="copyLastMonth()" *ngIf="monthData.categories.length == 0">Copy Last Month</button>
+    </div>
+    </div>
+  </div>
+</div>
+
